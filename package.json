@@ -1,0 +1,34 @@
+{
+  "name": "happo-plugin-gatsby",
+  "version": "1.0.0",
+  "description": "A happo.io plugin for Gatsby projects",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enduire/happo-plugin-gatsby.git"
+  },
+  "keywords": [
+    "screenshot",
+    "testing",
+    "storybook",
+    "happo",
+    "visual",
+    "regression",
+    "testing"
+  ],
+  "author": "Henric Trotzig <henric.trotzig@happo.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/enduire/happo-plugin-gatsby/issues"
+  },
+  "homepage": "https://github.com/enduire/happo-plugin-gatsby#readme",
+  "devDependencies": {},
+  "peerDependencies": {},
+  "optionalDependencies": {},
+  "dependencies": {
+    "glob": "^7.1.3"
+  }
+}
