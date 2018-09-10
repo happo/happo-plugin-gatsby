@@ -1,6 +1,7 @@
 # happo-plugin-gatsby
 
-A [happo.io](https://github.com/enduire/happo.io) plugin for Gatsby.
+A [happo.io](https://github.com/enduire/happo.io) plugin making it easy to add
+screenshot testing for [Gatsby](https://www.gatsbyjs.org/) projects.
 
 ## Usage
 
