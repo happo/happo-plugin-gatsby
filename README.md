@@ -15,7 +15,8 @@ module.exports = {
   // ...
   plugins: [
     happoPluginGatsby({
-      // options go here
+      pages: ['/', '/blog', '/blog/how-we-do-things'],
+      // other options go here
     }),
   ],
 
@@ -23,49 +24,26 @@ module.exports = {
 }
 ```
 
-The Gatsby plugin for Happo takes screenshots on pre-built Gatsby pages.
-Therefore, before you run `happo run` you need to run a Gatsby build. Use the
-[`INSTALL_CMD` environment
-variable](https://github.com/enduire/happo.io#integrating-with-your-continuous-integration-ci-environment)
-to tell Happo to build before screenshooting.  This could look something like
-this (using Travis CI as an example):
-
-```yaml
-# .travis.yml
-script:
-- INSTALL_CMD="yarn build" yarn happo-ci
-```
-
 ## Options
 
-### `pageFilter`
+### `pages`
 
-By default, all Gatsby pages are included in the test suite. By providing a
-filter function, you can exclude certain pages. Here's an example excluding all
-"blog" pages:
+By default, only the index page is included in the test suite. List all URLs
+that you want to be part of the test suite in the `pages` array.
 
 ```js
 happoPluginGatsby({
-  pageFilter: (pathToFile) => {
-    if (/\/blog/.test(pathToFile)) {
-      // exclude blog pages
-      return false;
-    }
-    return true;
-  },
+  pages: ['/', '/blog', '/about'],
 });
 ```
 
-### `publicFolder`
+### `outputDir`
 
-Use this option to override where Happo looks for pre-built Gatsby pages. The
-default is `path.resolve(process.cwd(), 'public')`. Make sure to use an
-absolute file path here.
+Use this option to override where Happo stores the Gatby build. The default is
+`'public'`.
 
 ```js
-const path = require('path');
-
 happoPluginGatsby({
-  publicFolder: path.resolve(__dirname, 'custom-build'),
+  publicFolder: 'happo-public'
 });
 ```
