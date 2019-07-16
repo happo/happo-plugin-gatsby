@@ -3,9 +3,15 @@
 A [happo.io](https://github.com/enduire/happo.io) plugin making it easy to add
 screenshot testing for [Gatsby](https://www.gatsbyjs.org/) projects.
 
+## Installation
+
+```
+npm install --save-dev happo-plugin-gatsby
+```
+
 ## Usage
 
-Add the following to your `.happo.js` configuration file:
+First, add the following to your `.happo.js` configuration file:
 
 ```js
 // .happo.js
@@ -22,6 +28,14 @@ module.exports = {
 
   type: 'plain',
 }
+```
+
+Then, add a call to `happo-plugin-gatsby/register` in `gatsby-browser.js`. This
+will ensure that happo workers can navigate through your application.
+
+```
+// gatsby-browser.js
+import 'happo-plugin-gatsby/register';
 ```
 
 ## Options
