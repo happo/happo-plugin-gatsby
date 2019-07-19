@@ -21,7 +21,7 @@ module.exports = {
   // ...
   plugins: [
     happoPluginGatsby({
-      pages: ['/', '/blog', '/blog/how-we-do-things'],
+      pages: ['/', '/blog/', '/blog/how-we-do-things/'],
       // other options go here
     }),
   ],
@@ -36,6 +36,33 @@ will ensure that happo workers can navigate through your application.
 ```
 // gatsby-browser.js
 import 'happo-plugin-gatsby/register';
+```
+
+Additionally, if you want to speed up the gatsby build or if you're running
+into errors from the happo.io API related to payloads being too large, you can
+limit page creation to only the pages included in the happo run. Modify (or
+create) `gatsby-node.js` so that it uses `happo-plugin-gatsby/filter`:
+
+```
+// gatsby-node.js
+const { onCreatePage, createPageFilter } = require('happo-plugin-gatsby/filter');
+
+exports.onCreatePage = ({ page, actions }) => {
+  // The provided `onCreatePage` filter will filter out pages that aren't part
+  // of the happo test suite
+  onCreatePage({ page, actions });
+});
+
+exports.createPages = async ({ graphql, actions }) => {
+  // The `createPageFilter` function will return a modified/proxied
+  // `createPage` function that will ignore pages that aren't part of the happo
+  // test suite
+  const createPage = createPageFilter(actions.createPage);
+  createPage({
+    path: '/foo/',
+    component: 'some/component/file',
+  });
+}
 ```
 
 ## Options
