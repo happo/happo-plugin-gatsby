@@ -36,6 +36,7 @@ module.exports = function happoPluginGatsby({
 
         const spawned = spawn('node_modules/.bin/gatsby', ['build'], {
           stdio: 'inherit',
+          env: Object.assign({ HAPPO_PAGES: JSON.stringify(pages) }, process.env),
         });
 
         spawned.on('exit', code => {

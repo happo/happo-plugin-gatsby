@@ -29,7 +29,7 @@
     "webpack": "^4.18.0"
   },
   "peerDependencies": {
-    "happo.io": "^3.0.0",
+    "happo.io": "^3.0.0"
   },
   "dependencies": {
     "archiver": "^3.0.0",
