@@ -3,9 +3,15 @@
 A [happo.io](https://github.com/enduire/happo.io) plugin making it easy to add
 screenshot testing for [Gatsby](https://www.gatsbyjs.org/) projects.
 
+## Installation
+
+```
+npm install --save-dev happo-plugin-gatsby
+```
+
 ## Usage
 
-Add the following to your `.happo.js` configuration file:
+First, add the following to your `.happo.js` configuration file:
 
 ```js
 // .happo.js
@@ -15,7 +21,8 @@ module.exports = {
   // ...
   plugins: [
     happoPluginGatsby({
-      // options go here
+      pages: ['/', '/blog/', '/blog/how-we-do-things/'],
+      // other options go here
     }),
   ],
 
@@ -23,49 +30,61 @@ module.exports = {
 }
 ```
 
-The Gatsby plugin for Happo takes screenshots on pre-built Gatsby pages.
-Therefore, before you run `happo run` you need to run a Gatsby build. Use the
-[`INSTALL_CMD` environment
-variable](https://github.com/enduire/happo.io#integrating-with-your-continuous-integration-ci-environment)
-to tell Happo to build before screenshooting.  This could look something like
-this (using Travis CI as an example):
+Then, add a call to `happo-plugin-gatsby/register` in `gatsby-browser.js`. This
+will ensure that happo workers can navigate through your application.
 
-```yaml
-# .travis.yml
-script:
-- INSTALL_CMD="yarn build" yarn happo-ci
+```
+// gatsby-browser.js
+import 'happo-plugin-gatsby/register';
+```
+
+Additionally, if you want to speed up the gatsby build or if you're running
+into errors from the happo.io API related to payloads being too large, you can
+limit page creation to only the pages included in the happo run. Modify (or
+create) `gatsby-node.js` so that it uses `happo-plugin-gatsby/filter`:
+
+```
+// gatsby-node.js
+const { onCreatePage, createPageFilter } = require('happo-plugin-gatsby/filter');
+
+exports.onCreatePage = ({ page, actions }) => {
+  // The provided `onCreatePage` filter will filter out pages that aren't part
+  // of the happo test suite
+  onCreatePage({ page, actions });
+});
+
+exports.createPages = async ({ graphql, actions }) => {
+  // The `createPageFilter` function will return a modified/proxied
+  // `createPage` function that will ignore pages that aren't part of the happo
+  // test suite
+  const createPage = createPageFilter(actions.createPage);
+  createPage({
+    path: '/foo/',
+    component: 'some/component/file',
+  });
+}
 ```
 
 ## Options
 
-### `pageFilter`
+### `pages`
 
-By default, all Gatsby pages are included in the test suite. By providing a
-filter function, you can exclude certain pages. Here's an example excluding all
-"blog" pages:
+By default, only the index page is included in the test suite. List all URLs
+that you want to be part of the test suite in the `pages` array.
 
 ```js
 happoPluginGatsby({
-  pageFilter: (pathToFile) => {
-    if (/\/blog/.test(pathToFile)) {
-      // exclude blog pages
-      return false;
-    }
-    return true;
-  },
+  pages: ['/', '/blog', '/about'],
 });
 ```
 
-### `publicFolder`
+### `outputDir`
 
-Use this option to override where Happo looks for pre-built Gatsby pages. The
-default is `path.resolve(process.cwd(), 'public')`. Make sure to use an
-absolute file path here.
+Use this option to override where Happo stores the Gatby build. The default is
+`'public'`.
 
 ```js
-const path = require('path');
-
 happoPluginGatsby({
-  publicFolder: path.resolve(__dirname, 'custom-build'),
+  publicFolder: 'happo-public'
 });
 ```
